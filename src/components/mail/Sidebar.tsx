@@ -145,7 +145,7 @@ export function Sidebar({
         whileTap={{ scale: 0.97 }}
         onClick={onCompose}
         className={cn(
-          "group mt-3 flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium",
+          "group mt-3 flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium",
           "border border-white/10 bg-white/5 text-foreground",
           "shadow-[0_8px_30px_-10px_rgba(0,0,0,0.6)] transition hover:bg-white/10",
           collapsed && "justify-center px-2",
@@ -260,7 +260,7 @@ export function Sidebar({
 
       <div
         className={cn(
-          "mt-3 flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] p-2",
+          "mt-3 flex items-center gap-3 rounded-md border border-white/5 bg-white/[0.03] p-2",
           collapsed && "justify-center",
         )}
       >
