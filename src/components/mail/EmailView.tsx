@@ -14,7 +14,7 @@ export function EmailView({ email }: { email: Email | null }) {
   }, [email?.id]);
 
   return (
-    <section className="glass relative m-3 ml-0 flex h-[calc(100vh-3.5rem-1.5rem)] flex-1 flex-col overflow-hidden rounded-lg">
+    <section className="mail-reader-atmosphere relative m-3 ml-0 flex h-[calc(100vh-3.5rem-1.5rem)] flex-1 flex-col overflow-hidden rounded-lg">
       <AnimatePresence mode="wait">
         {!email ? (
           <motion.div
@@ -111,10 +111,9 @@ export function EmailView({ email }: { email: Email | null }) {
                       {email.attachments.map((attachment) => (
                         <motion.div
                           key={attachment.name}
-                          whileHover={{ y: -2 }}
-                          className="glass-hover flex items-center gap-3 rounded-lg border border-white/5 p-3"
+                          className="glass-tile flex items-center gap-3 rounded-lg p-3"
                         >
-                          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white/[0.05] text-[10px] font-bold uppercase text-muted-foreground">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.06] text-[10px] font-bold uppercase text-muted-foreground shadow-[inset_0_1px_0_oklch(1_0_0/0.08)]">
                             {attachment.type}
                           </div>
                           <div className="min-w-0 flex-1">
@@ -179,7 +178,7 @@ export function EmailView({ email }: { email: Email | null }) {
 function SenderIdentity({ email, compact = false }: { email: Email; compact?: boolean }) {
   return (
     <div
-      className={`flex w-full items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.055)] ${
+      className={`glass-tile flex w-full items-center gap-2.5 rounded-lg ${
         compact ? "max-w-[280px] p-1.5" : "max-w-[280px] p-2.5"
       }`}
     >
@@ -238,7 +237,7 @@ function ReaderBody({ body }: { body: string }) {
         return (
           <dl
             key={index}
-            className="not-italic rounded-lg border border-white/[0.08] bg-black/20 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.045)]"
+            className="glass-tile not-italic rounded-lg p-3"
           >
             {block.fields.map((field) => (
               <div
