@@ -23,11 +23,24 @@ import { EventMailCard } from "@/features/calendar";
 import type { Email } from "./data";
 import { OTPCard, detectOtp } from "./OTPCard";
 
-export function EmailView({ email }: { email: Email | null }) {
+export type EmailViewActions = {
+  onReply?: (email: Email, body?: string) => void;
+  onReplyAll?: (email: Email) => void;
+  onForward?: (email: Email) => void;
+  onArchive?: (email: Email) => void;
+  onTrash?: (email: Email) => void;
+  onToggleStar?: (email: Email) => void;
+};
+
+export function EmailView({ email, actions = {} }: { email: Email | null; actions?: EmailViewActions }) {
   const [replyMenuOpen, setReplyMenuOpen] = useState(false);
+  const [quickReplyOpen, setQuickReplyOpen] = useState(false);
+  const [quickReplyText, setQuickReplyText] = useState("");
 
   useEffect(() => {
     setReplyMenuOpen(false);
+    setQuickReplyOpen(false);
+    setQuickReplyText("");
   }, [email?.id]);
 
   return (
@@ -87,11 +100,29 @@ export function EmailView({ email }: { email: Email | null }) {
                         <motion.button
                           whileHover={{ x: 2 }}
                           whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            setReplyMenuOpen(false);
+                            setQuickReplyOpen(true);
+                          }}
                           className="w-full rounded-sm px-3 py-2 text-left text-xs text-foreground/90 transition hover:bg-white/[0.06]"
                         >
                           <div className="flex items-center gap-2">
                             <Reply className="h-3 w-3" />
-                            <span>Manual reply</span>
+                            <span>Quick reply</span>
+                          </div>
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ x: 2 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            setReplyMenuOpen(false);
+                            actions.onReply?.(email);
+                          }}
+                          className="w-full rounded-sm px-3 py-2 text-left text-xs text-foreground/90 transition hover:bg-white/[0.06]"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Reply className="h-3 w-3" />
+                            <span>Open in compose</span>
                           </div>
                         </motion.button>
                       </motion.div>
@@ -99,13 +130,14 @@ export function EmailView({ email }: { email: Email | null }) {
                   </AnimatePresence>
                 </div>
                 {[
-                  { icon: ReplyAll, label: "Reply all" },
-                  { icon: Forward, label: "Forward" },
-                ].map(({ icon: Icon, label }) => (
+                  { icon: ReplyAll, label: "Reply all", onClick: () => actions.onReplyAll?.(email) },
+                  { icon: Forward, label: "Forward", onClick: () => actions.onForward?.(email) },
+                ].map(({ icon: Icon, label, onClick }) => (
                   <motion.button
                     key={label}
                     whileTap={{ scale: 0.96 }}
                     whileHover={{ y: -1 }}
+                    onClick={onClick}
                     className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
                   >
                     <Icon className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{label}</span>
@@ -114,15 +146,33 @@ export function EmailView({ email }: { email: Email | null }) {
               </div>
 
               <div className="flex items-center justify-end gap-1">
-                {[Archive, Trash2, Star].map((Icon, i) => (
-                  <motion.button
-                    key={i}
-                    whileTap={{ scale: 0.9 }}
-                    className="rounded-md p-2 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
-                  >
-                    <Icon className="h-4 w-4" />
-                  </motion.button>
-                ))}
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => actions.onArchive?.(email)}
+                  title="Archive"
+                  className="rounded-md p-2 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+                >
+                  <Archive className="h-4 w-4" />
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => actions.onTrash?.(email)}
+                  title="Move to trash"
+                  className="rounded-md p-2 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => actions.onToggleStar?.(email)}
+                  title={email.starred ? "Unstar" : "Star"}
+                  className={cn(
+                    "rounded-md p-2 transition hover:bg-white/[0.06]",
+                    email.starred ? "text-amber-300" : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Star className={cn("h-4 w-4", email.starred && "fill-current")} />
+                </motion.button>
               </div>
             </div>
 
@@ -186,6 +236,56 @@ export function EmailView({ email }: { email: Email | null }) {
                 <div className="h-8" />
               </article>
             </div>
+
+            <AnimatePresence>
+              {quickReplyOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 12 }}
+                  transition={{ duration: 0.2 }}
+                  className="border-t border-white/[0.07] bg-white/[0.02] px-5 py-3 backdrop-blur-md sm:px-7"
+                >
+                  <div className="mx-auto flex w-full max-w-[920px] items-end gap-2">
+                    <textarea
+                      value={quickReplyText}
+                      onChange={(e) => setQuickReplyText(e.target.value)}
+                      placeholder={`Reply to ${email.from}…`}
+                      rows={2}
+                      className="glow-ring flex-1 resize-none rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-white/20 focus:outline-none"
+                    />
+                    <div className="flex flex-col gap-1.5">
+                      <motion.button
+                        whileTap={{ scale: 0.96 }}
+                        onClick={() => {
+                          setQuickReplyOpen(false);
+                          setQuickReplyText("");
+                        }}
+                        className="rounded-md border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] text-muted-foreground transition hover:bg-white/[0.08] hover:text-foreground"
+                      >
+                        Cancel
+                      </motion.button>
+                      <motion.button
+                        whileTap={{ scale: 0.96 }}
+                        whileHover={{ y: -1 }}
+                        disabled={!quickReplyText.trim()}
+                        onClick={() => {
+                          actions.onReply?.(email, quickReplyText);
+                          setQuickReplyOpen(false);
+                          setQuickReplyText("");
+                        }}
+                        className={cn(
+                          "rounded-md border border-white/10 bg-white/[0.08] px-3 py-1.5 text-[11px] font-medium text-foreground transition",
+                          quickReplyText.trim() ? "hover:bg-white/[0.14]" : "cursor-not-allowed opacity-50"
+                        )}
+                      >
+                        Send
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
           </motion.div>
         )}
