@@ -1,5 +1,17 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Paperclip, Sparkles, Send, Image as ImageIcon, Smile, FileText } from "lucide-react";
+import {
+  CalendarClock,
+  Coins,
+  FileText,
+  Image as ImageIcon,
+  Lock,
+  Paperclip,
+  ReceiptText,
+  Send,
+  Smile,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { EmojiPicker } from "./EmojiPicker";
 import { cn } from "@/lib/utils";
@@ -31,6 +43,9 @@ export function Compose({
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [encrypted, setEncrypted] = useState(true);
+  const [receipt, setReceipt] = useState(true);
+  const [postage, setPostage] = useState("0.0001");
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -50,6 +65,9 @@ export function Compose({
       setBody("");
       setAttachments([]);
       setEmojiOpen(false);
+      setEncrypted(true);
+      setReceipt(true);
+      setPostage("0.0001");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initialTo, initialSubject, initialBody]);
@@ -107,7 +125,7 @@ export function Compose({
     setAttachments(attachments.filter((_, i) => i !== index));
   };
 
-  const handleSend = async () => {
+  const handleSend = async (scheduled = false) => {
     if (!to.trim()) {
       onShowToast?.("Please enter a recipient");
       return;
@@ -124,7 +142,11 @@ export function Compose({
     
     setIsSending(false);
     onClose();
-    onShowToast?.("Message sent successfully");
+    onShowToast?.(
+      scheduled
+        ? "Message scheduled with postage reserved"
+        : `Encrypted message sent with ${postage} XLM postage`,
+    );
   };
 
   const handleEmojiSelect = (emoji: string) => {
@@ -215,6 +237,39 @@ export function Compose({
                   Tab to insert
                 </button>
               </motion.div>
+
+              <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                <ProtocolToggle
+                  active={encrypted}
+                  icon={Lock}
+                  label="Encrypt"
+                  detail="End-to-end"
+                  onClick={() => setEncrypted((value) => !value)}
+                />
+                <ProtocolToggle
+                  active={receipt}
+                  icon={ReceiptText}
+                  label="Read receipt"
+                  detail="On-chain proof"
+                  onClick={() => setReceipt((value) => !value)}
+                />
+                <label className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.035] px-3 py-2">
+                  <Coins className="h-4 w-4 text-muted-foreground" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[10px] uppercase tracking-wider text-muted-foreground">Postage</span>
+                    <span className="flex items-center gap-1 text-xs text-foreground">
+                      <input
+                        value={postage}
+                        onChange={(event) => setPostage(event.target.value)}
+                        inputMode="decimal"
+                        className="w-16 bg-transparent font-mono outline-none"
+                        aria-label="Postage amount"
+                      />
+                      XLM
+                    </span>
+                  </span>
+                </label>
+              </div>
             </div>
             <div className="flex items-center gap-1 border-t border-white/5 px-3 py-2.5">
               {/* Hidden file inputs */}
@@ -273,12 +328,21 @@ export function Compose({
               
               {/* Send button */}
               <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={() => handleSend(true)}
+                disabled={isSending}
+                className="ml-auto inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+              >
+                <CalendarClock className="h-3.5 w-3.5" />
+                Schedule
+              </motion.button>
+              <motion.button
                 whileHover={{ y: -1 }} 
                 whileTap={{ scale: 0.97 }}
-                onClick={handleSend}
+                onClick={() => handleSend(false)}
                 disabled={isSending}
                 className={cn(
-                  "ml-auto inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.08] px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-white/[0.14]",
+                  "inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.08] px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-white/[0.14]",
                   isSending && "opacity-50 cursor-not-allowed"
                 )}
                 style={{ boxShadow: "0 8px 30px -10px rgba(0,0,0,0.6)" }}
@@ -291,6 +355,40 @@ export function Compose({
         </>
       )}
     </AnimatePresence>
+  );
+}
+
+function ProtocolToggle({
+  active,
+  icon: Icon,
+  label,
+  detail,
+  onClick,
+}: {
+  active: boolean;
+  icon: typeof Lock;
+  label: string;
+  detail: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        "flex items-center gap-2 rounded-lg border px-3 py-2 text-left transition",
+        active
+          ? "border-emerald-200/20 bg-emerald-200/[0.06]"
+          : "border-white/10 bg-white/[0.025] opacity-60",
+      )}
+    >
+      <Icon className={cn("h-4 w-4", active ? "text-emerald-200" : "text-muted-foreground")} />
+      <span>
+        <span className="block text-xs font-medium text-foreground">{label}</span>
+        <span className="block text-[10px] text-muted-foreground">{detail}</span>
+      </span>
+    </button>
   );
 }
 
