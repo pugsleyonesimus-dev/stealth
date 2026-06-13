@@ -262,7 +262,9 @@ export function EmailView({
                             <div className="mail-attachment-name truncate text-[11px] font-semibold leading-[14px] text-foreground/92">
                               {attachment.name}
                             </div>
-                            <div className="text-[9.5px] leading-[12px] text-muted-foreground">{attachment.size}</div>
+                            <div className="text-[9.5px] leading-[12px] text-muted-foreground">
+                              {attachment.size}
+                            </div>
                           </div>
                         </motion.div>
                       ))}
@@ -313,7 +315,9 @@ export function EmailView({
                         }}
                         className={cn(
                           "rounded-md border border-white/10 bg-white/[0.08] px-3 py-1.5 text-[11px] font-medium text-foreground transition",
-                          quickReplyText.trim() ? "hover:bg-white/[0.14]" : "cursor-not-allowed opacity-50"
+                          quickReplyText.trim()
+                            ? "hover:bg-white/[0.14]"
+                            : "cursor-not-allowed opacity-50",
                         )}
                       >
                         Send
