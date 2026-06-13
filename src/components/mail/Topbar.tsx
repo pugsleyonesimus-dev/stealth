@@ -414,11 +414,22 @@ function IconBtn({
   );
 }
 
-function QuickAction({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
+function QuickAction({
+  icon: Icon,
+  label,
+  value,
+  onClick,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  onClick: () => void;
+}) {
   return (
     <motion.button
       whileTap={{ scale: 0.94 }}
       aria-label={label}
+      onClick={onClick}
       className="group glass-tile flex h-9 items-center gap-2 rounded-[6px] px-2.5 text-xs text-muted-foreground transition hover:text-foreground"
     >
       <Icon className="h-4 w-4" />
