@@ -162,7 +162,7 @@
       0 0 0 1px oklch(1 0 0 / 0.1);
   }
   .ambient-bg {
-    background: var(--gradient-ambient), oklch(0.16 0.005 270);
+    background: var(--gradient-ambient), var(--background);
   }
   .silver-text {
     background: var(--gradient-silver);
@@ -178,9 +178,8 @@
   }
   .mail-list-atmosphere {
     background:
-      radial-gradient(circle at 12% 4%, oklch(0.55 0.008 270 / 0.10), transparent 36%),
-      radial-gradient(circle at 82% 92%, oklch(0.40 0.008 270 / 0.12), transparent 44%),
-      var(--glass);
+      radial-gradient(circle at 12% 4%, oklch(0.55 0.008 270 / 0.1), transparent 36%),
+      radial-gradient(circle at 82% 92%, oklch(0.4 0.008 270 / 0.12), transparent 44%), var(--glass);
     backdrop-filter: blur(28px) saturate(150%);
     -webkit-backdrop-filter: blur(28px) saturate(150%);
     border: 1px solid oklch(1 0 0 / 0.07);
