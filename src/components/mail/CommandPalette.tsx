@@ -65,6 +65,16 @@ export function CommandPalette({
   }, [onClose]);
 
   const filtered = items.filter((item) => item.label.toLowerCase().includes(q.toLowerCase()));
+  const messageResults = q.trim()
+    ? emails
+        .filter((email) =>
+          [email.from, email.email, email.subject, email.preview, ...(email.labels ?? [])]
+            .join(" ")
+            .toLowerCase()
+            .includes(q.toLowerCase()),
+        )
+        .slice(0, 6)
+    : [];
 
   return (
     <AnimatePresence>
@@ -98,6 +108,37 @@ export function CommandPalette({
               </kbd>
             </div>
             <ul className="max-h-80 overflow-y-auto p-2">
+              {messageResults.length > 0 && (
+                <li className="px-3 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Messages
+                </li>
+              )}
+              {messageResults.map((email) => (
+                <li key={email.id}>
+                  <button
+                    onClick={() => {
+                      onSelectEmail?.(email);
+                      onClose();
+                    }}
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[0.06]"
+                  >
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm text-foreground/90">
+                        {email.subject}
+                      </span>
+                      <span className="block truncate text-[11px] text-muted-foreground">
+                        {email.from}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+              {filtered.length > 0 && (
+                <li className="px-3 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Commands
+                </li>
+              )}
               {filtered.map((it) => (
                 <li key={it.label}>
                   <button 
