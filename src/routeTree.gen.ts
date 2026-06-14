@@ -17,6 +17,7 @@ import { Route as ApiV1PostageQuoteRouteImport } from './routes/api/v1/postage/q
 import { Route as ApiV1PostageMessageIdRouteImport } from './routes/api/v1/postage/$messageId'
 import { Route as ApiV1PoliciesEvaluateRouteImport } from './routes/api/v1/policies/evaluate'
 import { Route as ApiV1PoliciesOwnerRouteImport } from './routes/api/v1/policies/$owner'
+import { Route as ApiV1PostageMessageIdSettleRouteImport } from './routes/api/v1/postage/$messageId/settle'
 import { Route as ApiV1PoliciesOwnerSendersSenderRouteImport } from './routes/api/v1/policies/$owner/senders/$sender'
 
 const IndexRoute = IndexRouteImport.update({
@@ -59,6 +60,12 @@ const ApiV1PoliciesOwnerRoute = ApiV1PoliciesOwnerRouteImport.update({
   path: '/api/v1/policies/$owner',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1PostageMessageIdSettleRoute =
+  ApiV1PostageMessageIdSettleRouteImport.update({
+    id: '/settle',
+    path: '/settle',
+    getParentRoute: () => ApiV1PostageMessageIdRoute,
+  } as any)
 const ApiV1PoliciesOwnerSendersSenderRoute =
   ApiV1PoliciesOwnerSendersSenderRouteImport.update({
     id: '/senders/$sender',
@@ -72,9 +79,10 @@ export interface FileRoutesByFullPath {
   '/api/v1/protocol': typeof ApiV1ProtocolRoute
   '/api/v1/policies/$owner': typeof ApiV1PoliciesOwnerRouteWithChildren
   '/api/v1/policies/evaluate': typeof ApiV1PoliciesEvaluateRoute
-  '/api/v1/postage/$messageId': typeof ApiV1PostageMessageIdRoute
+  '/api/v1/postage/$messageId': typeof ApiV1PostageMessageIdRouteWithChildren
   '/api/v1/postage/quote': typeof ApiV1PostageQuoteRoute
   '/api/v1/postage/': typeof ApiV1PostageIndexRoute
+  '/api/v1/postage/$messageId/settle': typeof ApiV1PostageMessageIdSettleRoute
   '/api/v1/policies/$owner/senders/$sender': typeof ApiV1PoliciesOwnerSendersSenderRoute
 }
 export interface FileRoutesByTo {
@@ -83,9 +91,10 @@ export interface FileRoutesByTo {
   '/api/v1/protocol': typeof ApiV1ProtocolRoute
   '/api/v1/policies/$owner': typeof ApiV1PoliciesOwnerRouteWithChildren
   '/api/v1/policies/evaluate': typeof ApiV1PoliciesEvaluateRoute
-  '/api/v1/postage/$messageId': typeof ApiV1PostageMessageIdRoute
+  '/api/v1/postage/$messageId': typeof ApiV1PostageMessageIdRouteWithChildren
   '/api/v1/postage/quote': typeof ApiV1PostageQuoteRoute
   '/api/v1/postage': typeof ApiV1PostageIndexRoute
+  '/api/v1/postage/$messageId/settle': typeof ApiV1PostageMessageIdSettleRoute
   '/api/v1/policies/$owner/senders/$sender': typeof ApiV1PoliciesOwnerSendersSenderRoute
 }
 export interface FileRoutesById {
@@ -95,9 +104,10 @@ export interface FileRoutesById {
   '/api/v1/protocol': typeof ApiV1ProtocolRoute
   '/api/v1/policies/$owner': typeof ApiV1PoliciesOwnerRouteWithChildren
   '/api/v1/policies/evaluate': typeof ApiV1PoliciesEvaluateRoute
-  '/api/v1/postage/$messageId': typeof ApiV1PostageMessageIdRoute
+  '/api/v1/postage/$messageId': typeof ApiV1PostageMessageIdRouteWithChildren
   '/api/v1/postage/quote': typeof ApiV1PostageQuoteRoute
   '/api/v1/postage/': typeof ApiV1PostageIndexRoute
+  '/api/v1/postage/$messageId/settle': typeof ApiV1PostageMessageIdSettleRoute
   '/api/v1/policies/$owner/senders/$sender': typeof ApiV1PoliciesOwnerSendersSenderRoute
 }
 export interface FileRouteTypes {
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/api/v1/postage/$messageId'
     | '/api/v1/postage/quote'
     | '/api/v1/postage/'
+    | '/api/v1/postage/$messageId/settle'
     | '/api/v1/policies/$owner/senders/$sender'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -122,6 +133,7 @@ export interface FileRouteTypes {
     | '/api/v1/postage/$messageId'
     | '/api/v1/postage/quote'
     | '/api/v1/postage'
+    | '/api/v1/postage/$messageId/settle'
     | '/api/v1/policies/$owner/senders/$sender'
   id:
     | '__root__'
@@ -133,6 +145,7 @@ export interface FileRouteTypes {
     | '/api/v1/postage/$messageId'
     | '/api/v1/postage/quote'
     | '/api/v1/postage/'
+    | '/api/v1/postage/$messageId/settle'
     | '/api/v1/policies/$owner/senders/$sender'
   fileRoutesById: FileRoutesById
 }
@@ -142,7 +155,7 @@ export interface RootRouteChildren {
   ApiV1ProtocolRoute: typeof ApiV1ProtocolRoute
   ApiV1PoliciesOwnerRoute: typeof ApiV1PoliciesOwnerRouteWithChildren
   ApiV1PoliciesEvaluateRoute: typeof ApiV1PoliciesEvaluateRoute
-  ApiV1PostageMessageIdRoute: typeof ApiV1PostageMessageIdRoute
+  ApiV1PostageMessageIdRoute: typeof ApiV1PostageMessageIdRouteWithChildren
   ApiV1PostageQuoteRoute: typeof ApiV1PostageQuoteRoute
   ApiV1PostageIndexRoute: typeof ApiV1PostageIndexRoute
 }
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1PoliciesOwnerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/postage/$messageId/settle': {
+      id: '/api/v1/postage/$messageId/settle'
+      path: '/settle'
+      fullPath: '/api/v1/postage/$messageId/settle'
+      preLoaderRoute: typeof ApiV1PostageMessageIdSettleRouteImport
+      parentRoute: typeof ApiV1PostageMessageIdRoute
+    }
     '/api/v1/policies/$owner/senders/$sender': {
       id: '/api/v1/policies/$owner/senders/$sender'
       path: '/senders/$sender'
@@ -226,13 +246,26 @@ const ApiV1PoliciesOwnerRouteChildren: ApiV1PoliciesOwnerRouteChildren = {
 const ApiV1PoliciesOwnerRouteWithChildren =
   ApiV1PoliciesOwnerRoute._addFileChildren(ApiV1PoliciesOwnerRouteChildren)
 
+interface ApiV1PostageMessageIdRouteChildren {
+  ApiV1PostageMessageIdSettleRoute: typeof ApiV1PostageMessageIdSettleRoute
+}
+
+const ApiV1PostageMessageIdRouteChildren: ApiV1PostageMessageIdRouteChildren = {
+  ApiV1PostageMessageIdSettleRoute: ApiV1PostageMessageIdSettleRoute,
+}
+
+const ApiV1PostageMessageIdRouteWithChildren =
+  ApiV1PostageMessageIdRoute._addFileChildren(
+    ApiV1PostageMessageIdRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiV1HealthRoute: ApiV1HealthRoute,
   ApiV1ProtocolRoute: ApiV1ProtocolRoute,
   ApiV1PoliciesOwnerRoute: ApiV1PoliciesOwnerRouteWithChildren,
   ApiV1PoliciesEvaluateRoute: ApiV1PoliciesEvaluateRoute,
-  ApiV1PostageMessageIdRoute: ApiV1PostageMessageIdRoute,
+  ApiV1PostageMessageIdRoute: ApiV1PostageMessageIdRouteWithChildren,
   ApiV1PostageQuoteRoute: ApiV1PostageQuoteRoute,
   ApiV1PostageIndexRoute: ApiV1PostageIndexRoute,
 }

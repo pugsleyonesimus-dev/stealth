@@ -69,3 +69,18 @@ export function assertPostageParticipant(postage: Postage, actor: string) {
     throw new ApiError(403, "forbidden", "Only message participants can read this postage");
   }
 }
+
+export async function resolvePostage(
+  repository: ApiRepository,
+  messageId: string,
+  status: "refunded" | "settled",
+) {
+  const postage = await getPostage(repository, messageId);
+  if (postage.status !== "pending") {
+    throw new ApiError(409, "conflict", "Postage has already been resolved", {
+      status: postage.status,
+    });
+  }
+
+  return repository.setPostage({ ...postage, status });
+}

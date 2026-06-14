@@ -5,6 +5,7 @@ import {
   assertPostageParticipant,
   getPostage,
   quotePostage,
+  resolvePostage,
   submitPostage,
 } from "../../../src/server/api/postage-service";
 
@@ -98,5 +99,25 @@ describe("postage service", () => {
     expect(() => assertPostageParticipant(postage, `G${"C".repeat(55)}`)).toThrowError(
       expect.objectContaining({ status: 403 }),
     );
+  });
+
+  it("settles pending postage once", async () => {
+    const repository = new MemoryApiRepository();
+    await repository.setPostage({
+      amount: "100",
+      createdAt: "2026-06-14T12:00:00.000Z",
+      messageId: "a".repeat(64),
+      paymentHash: "b".repeat(64),
+      recipient,
+      sender,
+      status: "pending",
+    });
+
+    await expect(resolvePostage(repository, "a".repeat(64), "settled")).resolves.toMatchObject({
+      status: "settled",
+    });
+    await expect(resolvePostage(repository, "a".repeat(64), "settled")).rejects.toMatchObject({
+      status: 409,
+    });
   });
 });
