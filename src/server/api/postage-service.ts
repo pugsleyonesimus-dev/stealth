@@ -1,5 +1,11 @@
 import type { Postage } from "./domain";
 import { ApiError } from "./errors";
+import {
+  checkAccountLimit,
+  checkIpLimit,
+  checkRelayLimit,
+  checkSenderRecipientLimit,
+} from "./abuse-service";
 import { getMailboxPolicy } from "./policy-service";
 import type { ApiRepository } from "./repository";
 
@@ -32,7 +38,42 @@ export async function submitPostage(
   repository: ApiRepository,
   input: Omit<Postage, "createdAt" | "status">,
   now = new Date(),
+  context: { ip?: string; relayId?: string } = {},
 ) {
+  const accountLimit = await checkAccountLimit(repository, input.sender);
+  if (!accountLimit.allowed) {
+    throw new ApiError(429, "rate_limited", "Account limit exceeded", {
+      retryAfterSeconds: accountLimit.retryAfterSeconds,
+    });
+  }
+
+  const ipLimit = await checkIpLimit(repository, context.ip ?? "unknown");
+  if (!ipLimit.allowed) {
+    throw new ApiError(429, "rate_limited", "IP limit exceeded", {
+      retryAfterSeconds: ipLimit.retryAfterSeconds,
+    });
+  }
+
+  const senderRecipientLimit = await checkSenderRecipientLimit(
+    repository,
+    input.sender,
+    input.recipient,
+  );
+  if (!senderRecipientLimit.allowed) {
+    throw new ApiError(429, "rate_limited", "Sender-recipient limit exceeded", {
+      retryAfterSeconds: senderRecipientLimit.retryAfterSeconds,
+    });
+  }
+
+  if (context.relayId && context.relayId !== "") {
+    const relayLimit = await checkRelayLimit(repository, context.relayId);
+    if (!relayLimit.allowed) {
+      throw new ApiError(429, "rate_limited", "Relay limit exceeded", {
+        retryAfterSeconds: relayLimit.retryAfterSeconds,
+      });
+    }
+  }
+
   if (await repository.getPostage(input.messageId)) {
     throw new ApiError(409, "conflict", "Postage already exists for this message");
   }
