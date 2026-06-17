@@ -1,0 +1,152 @@
+{
+  "tool": "vendor-mail-tracker",
+  "version": 1,
+  "threads": [
+    {
+      "id": "thread-vendor-001",
+      "vendor": "Acme Software LLC",
+      "vendorAddress": "sales@acmesoftware.test",
+      "subject": "Annual license renewal — Q3 2026",
+      "lastMessageAt": "2026-06-17T08:30:00Z",
+      "status": "new",
+      "priority": "medium",
+      "owner": "unassigned",
+      "flagged": false,
+      "replyDueAt": null,
+      "notes": [],
+      "reviewRequired": true
+    },
+    {
+      "id": "thread-vendor-002",
+      "vendor": "CloudStack Inc",
+      "vendorAddress": "contracts@cloudstack.test",
+      "subject": "Infrastructure pricing negotiation",
+      "lastMessageAt": "2026-06-14T15:45:00Z",
+      "status": "active",
+      "priority": "high",
+      "owner": "Jordan R.",
+      "flagged": false,
+      "replyDueAt": "2026-06-17T17:00:00Z",
+      "notes": [
+        {
+          "id": "note-001",
+          "author": "Jordan R.",
+          "body": "Waiting on legal to approve the SLA clause. Will follow up Friday.",
+          "createdAt": "2026-06-15T10:00:00Z"
+        }
+      ],
+      "reviewRequired": false
+    },
+    {
+      "id": "thread-vendor-003",
+      "vendor": "DataVault Partners",
+      "vendorAddress": "support@datavault.test",
+      "subject": "Data processing agreement — signature required",
+      "lastMessageAt": "2026-06-12T09:10:00Z",
+      "status": "awaiting-reply",
+      "priority": "urgent",
+      "owner": "Sam T.",
+      "flagged": true,
+      "replyDueAt": "2026-06-13T12:00:00Z",
+      "notes": [
+        {
+          "id": "note-002",
+          "author": "Sam T.",
+          "body": "Sent DPA draft on June 12. Vendor has not responded. Flagging for legal review.",
+          "createdAt": "2026-06-12T09:30:00Z"
+        },
+        {
+          "id": "note-003",
+          "author": "Alex M.",
+          "body": "Compliance requires vendor response before we can proceed with onboarding.",
+          "createdAt": "2026-06-13T14:00:00Z"
+        }
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "thread-vendor-004",
+      "vendor": "Horizon Design Studio",
+      "vendorAddress": "billing@horizondesign.test",
+      "subject": "Invoice #HDS-2204 — approved and paid",
+      "lastMessageAt": "2026-06-10T11:00:00Z",
+      "status": "resolved",
+      "priority": "low",
+      "owner": "Casey L.",
+      "flagged": false,
+      "replyDueAt": null,
+      "notes": [
+        {
+          "id": "note-004",
+          "author": "Casey L.",
+          "body": "Invoice approved by finance and payment processed on June 10.",
+          "createdAt": "2026-06-10T11:30:00Z"
+        }
+      ],
+      "reviewRequired": false
+    },
+    {
+      "id": "thread-vendor-005",
+      "vendor": "NovaTech Systems",
+      "vendorAddress": "enterprise@novatech.test",
+      "subject": "Security audit report — Q2 delivery",
+      "lastMessageAt": "2026-06-01T16:20:00Z",
+      "status": "archived",
+      "priority": "medium",
+      "owner": "Jordan R.",
+      "flagged": false,
+      "replyDueAt": null,
+      "notes": [],
+      "reviewRequired": false
+    }
+  ],
+  "expectedCards": [
+    {
+      "id": "thread-vendor-001",
+      "status": "new",
+      "priority": "medium",
+      "owner": "unassigned",
+      "flagged": false,
+      "reviewRequired": true
+    },
+    {
+      "id": "thread-vendor-002",
+      "status": "active",
+      "priority": "high",
+      "owner": "Jordan R.",
+      "flagged": false,
+      "reviewRequired": false
+    },
+    {
+      "id": "thread-vendor-003",
+      "status": "awaiting-reply",
+      "priority": "urgent",
+      "owner": "Sam T.",
+      "flagged": true,
+      "reviewRequired": true
+    },
+    {
+      "id": "thread-vendor-004",
+      "status": "resolved",
+      "priority": "low",
+      "owner": "Casey L.",
+      "flagged": false,
+      "reviewRequired": false
+    },
+    {
+      "id": "thread-vendor-005",
+      "status": "archived",
+      "priority": "medium",
+      "owner": "Jordan R.",
+      "flagged": false,
+      "reviewRequired": false
+    }
+  ],
+  "reviewNotes": [
+    "Thread addresses use .test TLD to avoid real vendor data.",
+    "replyDueAt on thread-vendor-003 is intentionally past-due to test urgency indicators.",
+    "Flagged + awaiting-reply threads must always surface reviewRequired: true.",
+    "Unassigned threads must always surface reviewRequired: true.",
+    "Archived threads are excluded from default filter views but reachable via the Archived tab."
+  ]
+}
