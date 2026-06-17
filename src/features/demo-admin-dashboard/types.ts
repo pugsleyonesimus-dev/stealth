@@ -179,6 +179,6 @@ export interface DemoItem {
   title: string;
   description: string;
 }
-export type { Campaign, CampaignFilters, CampaignStatus } from "./types/campaign.types";
+export type { Draft, DraftFilters } from "./types/draft";
 export type { Draft, DraftFilters } from "./types/draft";
 export type { Persona, PersonaFilters } from "./types/persona";
