@@ -89,6 +89,3 @@ export type { ValidationResultsPanelProps } from "./ValidationResultsPanel";
 
 export { AdminSearchBar } from "./AdminSearchBar";
 export type { AdminSearchBarProps } from "./AdminSearchBar";
-export { filterRows, normalize, resultCountLabel, searchAdminRecords } from "./searchRows";
-export { demoAdminRecords, adminSearchFields } from "./fixtures";
-export type { AdminDemoRecord, AdminRecordStatus } from "./types";
