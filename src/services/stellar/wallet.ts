@@ -5,7 +5,11 @@
  * (Ed25519). If the user declines the wallet prompt we throw
  * WalletRejectedError so the caller can preserve the draft.
  */
-import { isConnected, requestAccess, signMessage } from "@stellar/freighter-api";
+import {
+  isConnected as freighterIsConnected,
+  requestAccess as freighterRequestAccess,
+  signMessage as freighterSignMessage,
+} from "@stellar/freighter-api";
 
 export class WalletUnavailableError extends Error {
   constructor(message = "Freighter wallet was not detected") {
@@ -25,6 +29,33 @@ export interface WalletSignature {
   scheme: "Ed25519";
   signerAddress: string;
   value: string;
+}
+
+/**
+ * Wallet provider seam.
+ *
+ * Production always talks to the real Freighter API. End-to-end tests run in a
+ * headless browser with no wallet extension, so they may install a
+ * deterministic stub on `globalThis.__freighterApi`. The override is only
+ * consulted when explicitly set, so production behaviour is unchanged.
+ */
+type FreighterApi = {
+  isConnected: typeof freighterIsConnected;
+  requestAccess: typeof freighterRequestAccess;
+  signMessage: typeof freighterSignMessage;
+};
+
+function freighter(): FreighterApi {
+  const injected = (
+    globalThis as unknown as {
+      __freighterApi?: Partial<FreighterApi>;
+    }
+  ).__freighterApi;
+  return {
+    isConnected: injected?.isConnected ?? freighterIsConnected,
+    requestAccess: injected?.requestAccess ?? freighterRequestAccess,
+    signMessage: injected?.signMessage ?? freighterSignMessage,
+  };
 }
 
 function describe(error: unknown): string {
@@ -59,7 +90,9 @@ function normalizeSignature(signed: unknown): string {
  * rejection error to keep the draft intact.
  */
 export async function authorizeSend(canonicalPayload: string): Promise<WalletSignature> {
-  const connection = (await isConnected()) as {
+  const wallet = freighter();
+
+  const connection = (await wallet.isConnected()) as {
     isConnected?: boolean;
     error?: unknown;
   };
@@ -67,7 +100,7 @@ export async function authorizeSend(canonicalPayload: string): Promise<WalletSig
     throw new WalletUnavailableError();
   }
 
-  const access = (await requestAccess()) as {
+  const access = (await wallet.requestAccess()) as {
     address?: string;
     error?: unknown;
   };
@@ -79,7 +112,7 @@ export async function authorizeSend(canonicalPayload: string): Promise<WalletSig
     throw new WalletUnavailableError(accessError);
   }
 
-  const signed = (await signMessage(canonicalPayload)) as {
+  const signed = (await wallet.signMessage(canonicalPayload)) as {
     signedMessage?: unknown;
     signerAddress?: string;
     error?: unknown;
