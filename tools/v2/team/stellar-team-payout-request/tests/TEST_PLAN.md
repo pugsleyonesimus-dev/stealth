@@ -9,6 +9,7 @@ This document outlines the testing strategy for the Stellar Team Payout Request 
 This tool manages team payout requests via the Stellar blockchain. The following areas require test coverage:
 
 ### Core Functionality
+
 - [ ] Payout request creation
 - [ ] Payout request validation
 - [ ] Stellar transaction submission
@@ -16,6 +17,7 @@ This tool manages team payout requests via the Stellar blockchain. The following
 - [ ] Error handling and recovery
 
 ### Data Handling
+
 - [ ] Recipient validation
 - [ ] Amount validation
 - [ ] Stellar account validation
@@ -23,6 +25,7 @@ This tool manages team payout requests via the Stellar blockchain. The following
 - [ ] Transaction history
 
 ### User Interactions
+
 - [ ] Request form submission
 - [ ] Error state display and recovery
 - [ ] Loading state feedback
@@ -30,6 +33,7 @@ This tool manages team payout requests via the Stellar blockchain. The following
 - [ ] Cancellation handling
 
 ### Stellar Integration
+
 - [ ] Stellar network connection
 - [ ] Keypair management
 - [ ] Transaction submission
@@ -87,6 +91,7 @@ fixtures/
 ## Test Scenarios
 
 ### Happy Path
+
 1. **Create payout request**
    - User enters valid recipient email
    - User enters valid amount
@@ -96,30 +101,27 @@ fixtures/
    - User sees success confirmation
 
 ### Error Scenarios
+
 1. **Invalid recipient**
    - Invalid email format rejected
    - Non-existent recipient handled gracefully
-   
 2. **Invalid amount**
    - Negative amounts rejected
    - Zero amounts rejected
    - Amounts exceeding balance rejected
-   
 3. **Stellar errors**
    - Network connection failure handled
    - Transaction submission failure recoverable
    - Insufficient balance detected
 
 ### Edge Cases
+
 1. **Concurrent requests**
    - Multiple simultaneous payout requests handled
-   
 2. **Large amounts**
    - Large payout amounts processed correctly
-   
 3. **Rate limiting**
    - Rate limits from Stellar network handled
-   
 4. **Timeouts**
    - Long-running transactions don't block UI
 
@@ -159,15 +161,18 @@ bun test --coverage tools/v2/team/stellar-team-payout-request/tests
 ## Mocking Strategy
 
 ### Stellar Network Mocking
+
 - Use fixture data for Stellar API responses
 - Mock `SorobanClient` calls
 - Mock keypair operations for security
 
 ### Timer Mocking
+
 - Use `vitest.useFakeTimers()` for async tests
 - Control time progression in tests
 
 ### Local Storage Mocking
+
 - Mock localStorage for state persistence tests
 
 ## Known Limitations
@@ -195,6 +200,7 @@ bun test --coverage tools/v2/team/stellar-team-payout-request/tests
 ## Review Checklist for Tests
 
 When reviewing test additions:
+
 - [ ] Tests are clear and well-documented
 - [ ] Fixtures are realistic but controlled
 - [ ] Tests don't depend on external state

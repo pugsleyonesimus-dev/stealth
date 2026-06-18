@@ -1,11 +1,11 @@
-import React from 'react';
-import { AlertCircle } from 'lucide-react';
-import { Button } from '../../../src/components/ui/button';
+import React from "react";
+import { AlertCircle } from "lucide-react";
+import { Button } from "../../../src/components/ui/button";
 
 /**
  * WatchlistEmptyState
  * Accessible empty state for when no entries exist in watchlist
- * 
+ *
  * Accessibility considerations:
  * - Semantic heading for screen readers
  * - Descriptive aria-label on icon
@@ -20,21 +20,13 @@ export const WatchlistEmptyState: React.FC = () => {
       aria-live="polite"
       aria-label="No senders in watchlist"
     >
-      <AlertCircle
-        className="w-12 h-12 text-slate-400 mb-4"
-        aria-hidden="true"
-      />
-      <h2 className="text-lg font-semibold text-slate-900 mb-2">
-        No senders on watchlist
-      </h2>
+      <AlertCircle className="w-12 h-12 text-slate-400 mb-4" aria-hidden="true" />
+      <h2 className="text-lg font-semibold text-slate-900 mb-2">No senders on watchlist</h2>
       <p className="text-slate-600 text-center max-w-sm mb-6">
-        Start monitoring senders by adding them to your watchlist. You'll be 
-        alerted when they send mail.
+        Start monitoring senders by adding them to your watchlist. You'll be alerted when they send
+        mail.
       </p>
-      <Button
-        variant="outline"
-        aria-label="Add a sender to the watchlist"
-      >
+      <Button variant="outline" aria-label="Add a sender to the watchlist">
         Add Sender
       </Button>
     </div>

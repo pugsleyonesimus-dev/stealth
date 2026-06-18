@@ -40,27 +40,32 @@ All components are designed to meet WCAG 2.1 Level AA standards.
 ## Component-Specific Guidelines
 
 ### WatchlistEmptyState
+
 - Uses semantic `<h2>` for hierarchy
 - `role="status"` announces this is informational
 - Clear CTA button with descriptive label
 
 ### WatchlistLoadingState
+
 - `role="status"` with `aria-busy="true"`
 - Announces "Loading watchlist..." for context
 - Skeleton components don't trap focus
 
 ### WatchlistErrorState
-- Uses `<Alert>` component with `role="alert"` 
+
+- Uses `<Alert>` component with `role="alert"`
 - Error message is descriptive and actionable
 - Retry button clearly labeled
 
 ### WatchlistEntry
+
 - Icon has `aria-hidden="true"` since text provides context
 - Delete button has descriptive aria-label
 - Risk level uses both color and text
 - Proper heading hierarchy with `<h3>`
 
 ### WatchlistList
+
 - Uses semantic `<ul>` and `<li>` elements
 - List has descriptive aria-label
 - Count summary helps screen reader users understand size
@@ -69,6 +74,7 @@ All components are designed to meet WCAG 2.1 Level AA standards.
 ## Testing Accessibility
 
 ### Manual Testing Checklist
+
 - [ ] Keyboard navigation works (Tab through all controls)
 - [ ] Focus indicators are visible
 - [ ] Screen reader announces all content meaningfully
@@ -77,6 +83,7 @@ All components are designed to meet WCAG 2.1 Level AA standards.
 - [ ] No information conveyed by color alone
 
 ### Tools to Test With
+
 - NVDA (Windows) - free screen reader
 - JAWS (Windows) - commercial screen reader
 - VoiceOver (macOS/iOS) - built-in
@@ -84,6 +91,7 @@ All components are designed to meet WCAG 2.1 Level AA standards.
 - Lighthouse accessibility audit
 
 ### Screen Reader Testing Path
+
 1. Load component
 2. Review page structure announcement
 3. Navigate by heading (h) key in most readers

@@ -65,11 +65,13 @@ stellar-team-payout-request/
 ### Components (`components/`)
 
 **PayoutForm.tsx**
+
 - Collects payout request details from user
 - Validates input in real-time
 - Handles form submission
 
 **PayoutStatus.tsx**
+
 - Displays payout request status
 - Shows transaction details
 - Indicates Stellar network status
@@ -77,11 +79,13 @@ stellar-team-payout-request/
 ### Services (`services/`)
 
 **PayoutService.ts**
+
 - Core payout logic
 - Request validation
 - State management for payouts
 
 **StellarService.ts**
+
 - Stellar blockchain interactions
 - Account management
 - Transaction submission
@@ -90,11 +94,13 @@ stellar-team-payout-request/
 ### Hooks (`hooks/`)
 
 **usePayoutRequest**
+
 - Manages payout request state
 - Handles submission lifecycle
 - Error and loading states
 
 **useStellarAccount**
+
 - Manages Stellar account connection
 - Keypair handling
 - Account balance tracking
@@ -106,18 +112,18 @@ Test data in `fixtures/` folder:
 ```typescript
 // mock-payouts.ts
 export const mockPayoutRequest = {
-  id: '1',
-  recipientEmail: 'teammate@example.com',
-  amount: '100.00',
-  status: 'pending',
+  id: "1",
+  recipientEmail: "teammate@example.com",
+  amount: "100.00",
+  status: "pending",
   createdAt: new Date().toISOString(),
 };
 
 // mock-stellar-responses.ts
 export const mockSuccessResponse = {
-  id: '...',
-  type: 'payment',
-  status: 'success',
+  id: "...",
+  type: "payment",
+  status: "success",
 };
 ```
 
@@ -175,12 +181,12 @@ test('display payout details', () => {
 
 ```typescript
 // In your test file
-import { mockSuccessResponse } from '../fixtures/mock-stellar-responses';
+import { mockSuccessResponse } from "../fixtures/mock-stellar-responses";
 
-test('submit payout to Stellar', async () => {
+test("submit payout to Stellar", async () => {
   // Tests use mocked Stellar responses
   const result = await submitPayout(mockPayoutRequest);
-  expect(result.status).toBe('success');
+  expect(result.status).toBe("success");
 });
 ```
 
@@ -231,6 +237,7 @@ const estimatedFee = (baseFee.base_fee * operationCount) / 1e7; // stroops to XL
 ## Known Issues and Limitations
 
 See [KNOWN_ISSUES.md](./docs/KNOWN_ISSUES.md) for:
+
 - Current limitations
 - Workarounds
 - Future improvements
@@ -238,11 +245,13 @@ See [KNOWN_ISSUES.md](./docs/KNOWN_ISSUES.md) for:
 ## Testing Strategy
 
 ### Unit Tests
+
 - Test individual functions in isolation
 - Use mocked Stellar responses
 - Fast execution
 
 ### Integration Tests
+
 - Test component interactions
 - Use real Stellar testnet (with fixture accounts)
 - Slower, more comprehensive
@@ -265,6 +274,7 @@ bun test --coverage tools/v2/team/stellar-team-payout-request
 ## API Documentation
 
 See [docs/API.md](./docs/API.md) for:
+
 - Component prop interfaces
 - Service method signatures
 - Hook return types
@@ -275,7 +285,7 @@ See [docs/API.md](./docs/API.md) for:
 
 ```typescript
 // In development
-localStorage.setItem('DEBUG', 'stealth:payout:*');
+localStorage.setItem("DEBUG", "stealth:payout:*");
 ```
 
 ### Stellar Testnet Explorer
@@ -286,20 +296,24 @@ https://stellar.expert/explorer/testnet/
 ### Common Issues
 
 **Transaction failed: insufficient balance**
+
 - Ensure test account has XLM balance
 - Check fee estimation
 
 **Cannot connect to Stellar**
+
 - Verify `VITE_STELLAR_SERVER_URL` is correct
 - Check network connectivity
 
 **Keypair validation fails**
+
 - Ensure keypair uses correct network
 - Check keypair format (must be base64-encoded secret)
 
 ## Review Checklist for New Code
 
 When adding features or fixes, ensure:
+
 - [ ] Code stays within tool folder boundary
 - [ ] Uses local fixtures for tests (no real API calls)
 - [ ] Includes test coverage
@@ -313,6 +327,7 @@ When adding features or fixes, ensure:
 ⚠️ **Not currently integrated** - This is a standalone V2 tool.
 
 When integration is requested:
+
 - Create separate integration issue
 - Mounting code goes in app, not here
 - This folder remains source of truth for tool logic

@@ -23,6 +23,7 @@ interface PayoutFormData {
 ```
 
 **Usage:**
+
 ```tsx
 <PayoutForm
   onSubmit={async (data) => {
@@ -33,6 +34,7 @@ interface PayoutFormData {
 ```
 
 **Features:**
+
 - Real-time email validation
 - Amount input with formatting
 - Optional memo field
@@ -56,7 +58,7 @@ interface PayoutRequest {
   id: string;
   recipientEmail: string;
   amount: string;
-  status: 'pending' | 'submitted' | 'confirmed' | 'failed';
+  status: "pending" | "submitted" | "confirmed" | "failed";
   transactionId?: string;
   createdAt: string;
   updatedAt: string;
@@ -65,6 +67,7 @@ interface PayoutRequest {
 ```
 
 **Usage:**
+
 ```tsx
 <PayoutStatus
   payout={myPayoutRequest}
@@ -75,6 +78,7 @@ interface PayoutRequest {
 ```
 
 **Displays:**
+
 - Payout status with visual indicator
 - Transaction ID (if confirmed)
 - Created/updated timestamps
@@ -92,9 +96,7 @@ Core business logic for payout operations.
 ```typescript
 class PayoutService {
   // Create a new payout request
-  async createPayoutRequest(
-    data: PayoutFormData,
-  ): Promise<PayoutRequest>;
+  async createPayoutRequest(data: PayoutFormData): Promise<PayoutRequest>;
 
   // Get all payouts for user
   async getPayouts(userId: string): Promise<PayoutRequest[]>;
@@ -117,21 +119,22 @@ class PayoutService {
 ```
 
 **Example Usage:**
+
 ```typescript
 const service = new PayoutService();
 
 // Validate before submit
 const validation = service.validatePayoutRequest({
-  recipientEmail: 'user@example.com',
-  amount: '100.00',
+  recipientEmail: "user@example.com",
+  amount: "100.00",
 });
 
 if (validation.valid) {
   const payout = await service.createPayoutRequest({
-    recipientEmail: 'user@example.com',
-    amount: '100.00',
+    recipientEmail: "user@example.com",
+    amount: "100.00",
   });
-  console.log('Payout created:', payout.id);
+  console.log("Payout created:", payout.id);
 }
 ```
 
@@ -175,21 +178,22 @@ interface StellarAccount {
 
 interface TransactionResult {
   id: string;
-  status: 'success' | 'failure';
+  status: "success" | "failure";
   ledger: number;
   timestamp: string;
 }
 
 interface TransactionStatus {
-  status: 'pending' | 'confirmed' | 'failed';
+  status: "pending" | "confirmed" | "failed";
   confirmations: number;
   error?: string;
 }
 ```
 
 **Example Usage:**
+
 ```typescript
-import { Keypair } from 'stellar-sdk';
+import { Keypair } from "stellar-sdk";
 
 const service = new StellarService();
 const keypair = Keypair.fromSecret(process.env.STELLAR_SECRET_KEY);
@@ -198,14 +202,10 @@ service.initialize(keypair);
 
 // Check balance
 const account = await service.getAccount(keypair.publicKey());
-console.log('Balance:', account.balance, 'XLM');
+console.log("Balance:", account.balance, "XLM");
 
 // Submit payment
-const result = await service.submitPayment(
-  destinationAccountId,
-  '50.00',
-  'Team payout for Q1',
-);
+const result = await service.submitPayment(destinationAccountId, "50.00", "Team payout for Q1");
 ```
 
 ---
@@ -233,6 +233,7 @@ function usePayoutRequest(payoutId?: string): UsePayoutRequestResult;
 ```
 
 **Usage:**
+
 ```tsx
 function MyComponent() {
   const { payout, isLoading, error, submit, retry } = usePayoutRequest();
@@ -275,6 +276,7 @@ function useStellarAccount(): UseStellarAccountResult;
 ```
 
 **Usage:**
+
 ```tsx
 function AccountConnector() {
   const { account, isConnected, connect, refresh } = useStellarAccount();
@@ -310,23 +312,24 @@ export function isValidStellarAccount(accountId: string): boolean;
 
 // Validate XLM amount
 export function isValidAmount(amount: string): boolean;
-  // Must be parseable as number
-  // Must be > 0
-  // Max 2 decimal places
+// Must be parseable as number
+// Must be > 0
+// Max 2 decimal places
 
 // Validate memo string
 export function isValidMemo(memo: string): boolean;
-  // Max 28 bytes for text memo
+// Max 28 bytes for text memo
 ```
 
 **Usage:**
+
 ```typescript
 if (!isValidEmail(email)) {
-  throw new Error('Invalid email format');
+  throw new Error("Invalid email format");
 }
 
 if (!isValidAmount(amount)) {
-  throw new Error('Invalid amount (max 2 decimals, must be > 0)');
+  throw new Error("Invalid amount (max 2 decimals, must be > 0)");
 }
 ```
 
@@ -343,7 +346,7 @@ interface PayoutRequest {
   recipientStellarId?: string;
   amount: string; // In XLM, string for precision
   memo?: string;
-  status: 'pending' | 'submitted' | 'confirmed' | 'failed';
+  status: "pending" | "submitted" | "confirmed" | "failed";
   transactionId?: string;
   error?: string;
   createdAt: string; // ISO 8601
@@ -367,7 +370,7 @@ interface StellarTransaction {
   sourceAccount: string;
   destinationAccount: string;
   amount: string;
-  asset: 'native' | string; // 'native' for XLM
+  asset: "native" | string; // 'native' for XLM
   memo?: string;
   fee: string; // In stroops (1 XLM = 10^7 stroops)
   ledger: number;
@@ -387,7 +390,7 @@ try {
   await service.createPayoutRequest(invalidData);
 } catch (error) {
   if (error instanceof ValidationError) {
-    console.error('Validation failed:', error.errors);
+    console.error("Validation failed:", error.errors);
     // error.errors = { recipientEmail: 'Invalid format' }
   }
 }
@@ -396,11 +399,11 @@ try {
 try {
   await stellarService.submitPayment(dest, amount);
 } catch (error) {
-  if (error.type === 'STELLAR_ERROR') {
+  if (error.type === "STELLAR_ERROR") {
     // Handle Stellar-specific errors
-    if (error.code === 'insufficient_balance') {
+    if (error.code === "insufficient_balance") {
       // Account doesn't have enough XLM
-    } else if (error.code === 'destination_not_found') {
+    } else if (error.code === "destination_not_found") {
       // Destination account doesn't exist
     }
   }

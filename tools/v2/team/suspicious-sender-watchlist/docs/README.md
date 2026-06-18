@@ -27,12 +27,14 @@ suspicious-sender-watchlist/
 ## Features
 
 ### States Implemented
+
 - ✅ **Empty State**: Guides user to add first sender
 - ✅ **Loading State**: Shows skeleton loaders while fetching
 - ✅ **Error State**: Displays error with retry action
 - ✅ **Success State**: Shows list of watchlist entries
 
 ### Accessibility
+
 - ✅ WCAG 2.1 Level AA compliant
 - ✅ Keyboard navigation throughout
 - ✅ Screen reader optimized with semantic HTML and ARIA
@@ -41,6 +43,7 @@ suspicious-sender-watchlist/
 - ✅ See [ACCESSIBILITY.md](./docs/ACCESSIBILITY.md) for details
 
 ### Component Design
+
 - Each component is self-contained and focused
 - Uses shared UI component library from `src/components/ui/`
 - Isolatedto tool folder, not mounted in main app
@@ -52,7 +55,7 @@ suspicious-sender-watchlist/
 ### Import and Use
 
 ```tsx
-import { SuspiciousSenderWatchlist } from './components';
+import { SuspiciousSenderWatchlist } from "./components";
 
 export function MyPage() {
   return <SuspiciousSenderWatchlist />;
@@ -62,6 +65,7 @@ export function MyPage() {
 ### Component Props
 
 #### SuspiciousSenderWatchlist
+
 No props required. Manages its own state internally using local fixtures.
 
 ```tsx
@@ -69,11 +73,13 @@ No props required. Manages its own state internally using local fixtures.
 ```
 
 #### WatchlistList
+
 - `entries: WatchlistEntryData[]` - Array of entries to display
 - `onRemove: (id: string) => void` - Callback when removing entry
 - `onAddNew: () => void` - Callback when adding new entry
 
 #### WatchlistEntry
+
 - `id: string` - Unique identifier
 - `senderEmail: string` - Email address
 - `senderName: string` - Display name
@@ -91,12 +97,12 @@ The main `SuspiciousSenderWatchlist` component includes local test fixtures:
 ```tsx
 const fixtureEntries: WatchlistEntryData[] = [
   {
-    id: '1',
-    senderEmail: 'noreply@phishing-example.com',
-    senderName: 'Phishing Alert',
-    reason: 'Known phishing domain',
-    riskLevel: 'high',
-    dateAdded: '2025-01-10',
+    id: "1",
+    senderEmail: "noreply@phishing-example.com",
+    senderName: "Phishing Alert",
+    reason: "Known phishing domain",
+    riskLevel: "high",
+    dateAdded: "2025-01-10",
   },
   // ... more entries
 ];
@@ -111,7 +117,7 @@ useEffect(() => {
   // Replace fixture loading with API call
   fetchWatchlist().then((data) => {
     setEntries(data);
-    setState(data.length === 0 ? 'empty' : 'success');
+    setState(data.length === 0 ? "empty" : "success");
   });
 }, []);
 ```
@@ -121,6 +127,7 @@ useEffect(() => {
 For detailed accessibility testing instructions, see [ACCESSIBILITY.md](./docs/ACCESSIBILITY.md).
 
 **Quick test:**
+
 1. Navigate using only Tab key
 2. Test with screen reader (NVDA, JAWS, VoiceOver)
 3. Check focus indicators are visible
@@ -131,6 +138,7 @@ For detailed accessibility testing instructions, see [ACCESSIBILITY.md](./docs/A
 ⚠️ **Not currently mounted in main app** - This is intentional per V2 design.
 
 When integration is needed in the future:
+
 - Create a separate issue for app-level integration
 - Do not modify main app shell, routing, or design system in this issue
 - Import components from this folder as-is

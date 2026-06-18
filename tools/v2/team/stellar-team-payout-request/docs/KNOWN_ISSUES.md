@@ -13,6 +13,7 @@ The Stellar Team Payout Request tool is in development. This document tracks kno
 **Description:** The tool currently works with Stellar testnet only. Production mainnet support requires additional security review and configuration.
 
 **Workaround:**
+
 - Use testnet for all development and testing
 - Set `VITE_STELLAR_NETWORK=testnet` in environment
 - Obtain testnet XLM from: https://developers.stellar.org/docs/tutorials/create-account
@@ -28,12 +29,14 @@ The Stellar Team Payout Request tool is in development. This document tracks kno
 **Description:** Test keypairs are stored in environment variables. This is only acceptable for development/testing. Production deployment requires secure key management (e.g., AWS KMS, HashiCorp Vault).
 
 **Current Approach:**
+
 ```env
 # .env.local - DEVELOPMENT ONLY
 VITE_TEST_KEYPAIR_SECRET=SB... (testnet key)
 ```
 
 **Security Requirements for Production:**
+
 - Never store secrets in `.env` files
 - Use secure key manager
 - Rotate keys regularly
@@ -50,6 +53,7 @@ VITE_TEST_KEYPAIR_SECRET=SB... (testnet key)
 **Description:** Currently only handles single payouts. Batch processing would require additional logic.
 
 **Workaround:**
+
 - Submit payouts one at a time
 - UI shows pending payouts list
 
@@ -64,6 +68,7 @@ VITE_TEST_KEYPAIR_SECRET=SB... (testnet key)
 **Description:** Tool doesn't persist transaction history to database. All data is ephemeral during session.
 
 **Workaround:**
+
 - Query Stellar ledger directly for historical transactions
 - Export transaction ID for reference
 - Manual tracking in external systems
@@ -79,6 +84,7 @@ VITE_TEST_KEYPAIR_SECRET=SB... (testnet key)
 **Description:** Form accepts `scheduledFor` field, but backend doesn't process scheduled payouts.
 
 **Workaround:**
+
 - Submit payouts immediately
 - Implement external scheduler if needed
 
@@ -93,11 +99,13 @@ VITE_TEST_KEYPAIR_SECRET=SB... (testnet key)
 **Description:** `estimateFee()` assumes one operation per transaction. Batch payments would need updated calculation.
 
 **Current:**
+
 ```typescript
 fee = baseFeeRate * 1 operation = 100 stroops = 0.00001 XLM
 ```
 
 **For Multiple Operations:**
+
 ```typescript
 fee = baseFeeRate * N operations = 100 * N stroops
 ```
@@ -113,6 +121,7 @@ fee = baseFeeRate * N operations = 100 * N stroops
 **Description:** Tool requires full Stellar account ID. No email-to-account resolution.
 
 **Workaround:**
+
 - Require users to provide Stellar account ID (public key)
 - Users can verify on Stellar.expert
 
@@ -131,6 +140,7 @@ fee = baseFeeRate * N operations = 100 * N stroops
 **Needed:** "Error: Destination account does not exist. Please verify the account ID."
 
 **Workaround:**
+
 - Check error logs for detailed Stellar responses
 - Refer to Stellar documentation
 
@@ -145,6 +155,7 @@ fee = baseFeeRate * N operations = 100 * N stroops
 **Description:** After submission, tool doesn't poll for transaction confirmation. Must manually refresh.
 
 **Workaround:**
+
 - Click "Refresh" button to check status
 - Or wait 5-10 seconds and reload page
 
@@ -159,6 +170,7 @@ fee = baseFeeRate * N operations = 100 * N stroops
 **Description:** Test keypairs in fixtures need manual funding from testnet faucet.
 
 **Setup:**
+
 1. Get public key from test keypair
 2. Go to https://developers.stellar.org/docs/tutorials/create-account
 3. Paste public key and fund
@@ -199,22 +211,25 @@ fee = baseFeeRate * N operations = 100 * N stroops
 ### For Developers
 
 **Test Payout Success:**
+
 ```typescript
 // Use mock responses for unit tests
-import { mockSuccessResponse } from '../fixtures';
+import { mockSuccessResponse } from "../fixtures";
 
 // For integration tests, use real testnet with test account
 ```
 
 **Check Transaction Status:**
+
 - Use Stellar.expert: https://stellar.expert/explorer/testnet/
 - Look up transaction by ID
 - Verify payment was posted
 
 **Debug Stellar Errors:**
+
 ```typescript
 // Enable debug logging
-localStorage.setItem('DEBUG', 'stealth:stellar:*');
+localStorage.setItem("DEBUG", "stealth:stellar:*");
 
 // Check browser console for detailed Stellar SDK logs
 ```
@@ -224,6 +239,7 @@ localStorage.setItem('DEBUG', 'stealth:stellar:*');
 ## Reporting Issues
 
 When reporting issues:
+
 1. Check this list first
 2. Include exact error message
 3. Provide reproduction steps
@@ -235,18 +251,21 @@ When reporting issues:
 ## Future Improvements (Roadmap)
 
 ### High Priority
+
 - [ ] User-friendly error messages
 - [ ] Batch payment support
 - [ ] Enhanced error recovery UI
 - [ ] Transaction confirmation polling
 
 ### Medium Priority
+
 - [ ] Email account resolution (federation)
 - [ ] Scheduled payments
 - [ ] Transaction history persistence
 - [ ] Debounce validation
 
 ### Low Priority (Post-V2)
+
 - [ ] Mainnet support
 - [ ] Advanced fee options
 - [ ] Multi-asset support
@@ -266,6 +285,7 @@ When reporting issues:
 ## Contributing
 
 When fixing known issues:
+
 1. Ensure fix stays within tool folder
 2. Add tests for the fix
 3. Update this document
