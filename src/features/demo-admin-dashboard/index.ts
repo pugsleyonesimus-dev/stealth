@@ -87,24 +87,30 @@ export * from "./validationFixtures";
 export { ValidationResultsPanel } from "./ValidationResultsPanel";
 export type { ValidationResultsPanelProps } from "./ValidationResultsPanel";
 
+// Proof record editor, helpers, and formatting
+export { ProofRecordEditor } from "./ProofRecordEditor";
+export type { ProofRecordEditorProps } from "./ProofRecordEditor";
+export type {
+  ProofPostageStatus,
+  ProofRecord,
+  ProofRecordDraft,
+  ProofRecordFieldError,
+  ProofRecordValidationResult,
+} from "./types/proofRecord";
 export {
-  SnoozeMetadataEditor,
-  snoozedDemoMessages,
-  SNOOZE_PRESETS,
-  getSnoozePreset,
-  resolvePreset,
-  toLocalStamp,
-  validateCustomSnooze,
-  relativeDayLabel,
-  formatRemindAt,
-  metadataFromPreset,
-  metadataFromCustom,
-  DEMO_REFERENCE_NOW,
-  getDemoNow,
-  type SnoozePreset,
-  type CustomSnoozeValidation,
-  type SnoozeChoice,
-  type SnoozeMetadata,
-  type SnoozePresetId,
-  type SnoozedDemoMessage,
-} from "./snooze";
+  mockMessageHash,
+  mockPaymentHash,
+  mockDiagnosticId,
+  mockSignature,
+} from "./mockHashHelpers";
+export {
+  POSTAGE_STATUS_LABEL,
+  truncateHash,
+  formatLatency,
+  formatPostageStatus,
+  isValidMockHash,
+  isValidDiagnosticId,
+  formatProofSummary,
+  validateProofRecord,
+} from "./proofFormatting";
+export { demoProofRecords } from "./fixtures/proofRecordFixtures";
