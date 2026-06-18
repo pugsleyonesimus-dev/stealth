@@ -27,10 +27,12 @@ import {
   deriveProof,
   emails as initialEmails,
   getEmailsForFolder,
+  getFolderLabel,
   mailFolders,
   type Email,
   type MailFilters,
   type MailFolder,
+  type MailLocation,
 } from "@/components/mail/data";
 import { usePreferences, useLayoutPreferences } from "@/features/preferences";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -244,6 +246,22 @@ function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
     showToast(e.starred ? `Unstarred "${e.subject}"` : `Starred "${e.subject}"`);
   };
 
+  const handleMove = (emailIds: string[], target: MailFolder) => {
+    let moved = 0;
+    for (const id of emailIds) {
+      const email = emails.find((em) => em.id === id);
+      if (email && email.folder !== (target as MailLocation)) {
+        updateEmail(id, { folder: target as MailLocation });
+        moved++;
+      }
+    }
+    if (moved > 0) {
+      showToast(
+        `${moved === 1 ? "1 message" : `${moved} messages`} moved to ${getFolderLabel(target)}`,
+      );
+    }
+  };
+
   const handleMobileSnooze = (e: Email) => {
     openSnooze(e);
   };
@@ -437,9 +455,7 @@ function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
     if (!selectedId) return;
     const cur = emails.find((e) => e.id === selectedId);
     if (cur?.unread) updateEmail(selectedId, { unread: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
-
   const runCommand = useCallback(
     (id: CommandId, overrideEmail?: Email) => {
       const email = overrideEmail ?? selected;

@@ -3,6 +3,7 @@ import {
   Activity,
   BarChart3,
   Calendar,
+  CalendarRange,
   FileText,
   History,
   LayoutDashboard,
@@ -32,6 +33,7 @@ import { TemplatePicker } from "./templates";
 import { PRESET_SCENARIOS } from "./fixtures/presets";
 import { AdminDataTable, type Column } from "./components/AdminDataTable";
 import { CampaignMessageAssignmentPanel } from "./components/CampaignMessageAssignmentPanel";
+import { CampaignTimelinePanel } from "./components/CampaignTimelinePanel";
 
 // ─── Default Deterministic fake data ──────────────────────────────────────────
 
@@ -43,6 +45,7 @@ const NAV_ITEMS: DashboardNavItem[] = [
   { id: "events", label: "Events", description: "Demo calendar and protocol events" },
   { id: "templates", label: "Templates", description: "Pick message templates to populate drafts" },
   { id: "campaigns", label: "Campaigns", description: "Save and restore campaign draft snapshots" },
+  { id: "timeline", label: "Timeline", description: "Campaign phase timeline and milestones" },
   { id: "audit", label: "Audit", description: "Demo protocol event log" },
   { id: "analytics", label: "Analytics", description: "Privacy-preserving product analytics" },
 ];
@@ -181,6 +184,7 @@ const SECTION_ICON: Record<DashboardSection, React.ElementType> = {
   events: Calendar,
   templates: FileText,
   campaigns: History,
+  timeline: CalendarRange,
   audit: Activity,
   analytics: PieChart,
 };
@@ -795,6 +799,8 @@ export function DemoAdminDashboard({ className }: DemoAdminDashboardProps) {
           {activeSection === "templates" && <TemplatesContent />}
 
           {activeSection === "campaigns" && <CampaignMessageAssignmentPanel />}
+
+          {activeSection === "timeline" && <CampaignTimelinePanel />}
 
           {activeSection === "audit" && <AuditContent auditEvents={auditEvents} />}
         </div>
